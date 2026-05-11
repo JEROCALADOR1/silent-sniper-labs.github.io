@@ -1,40 +1,692 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SilentSniper Labs</title>
-  <style>
-    body {
-      background-color: #0d0d0d;
-      color: #ffffff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-align: center;
-      padding-top: 60px;
-    }
-    img {
-      width: 150px;
-      margin-bottom: 30px;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-    p {
-      font-size: 1.2rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    .container {
-      padding: 20px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sniper Labs · Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080c10;
+  --surface: #0e1318;
+  --surface2: #131a22;
+  --border: rgba(255,255,255,0.07);
+  --accent: #00e5a0;
+  --accent2: #00b8ff;
+  --text: #e8f0f8;
+  --muted: #5a6a7a;
+  --danger: #ff4f5e;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:200px 200px;
+  pointer-events:none;z-index:0;opacity:0.6;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.4rem 3rem;
+  background:rgba(8,12,16,0.8);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'Syne',sans-serif;
+  font-weight:800;font-size:1.1rem;
+  letter-spacing:-0.02em;
+  color:var(--text);
+}
+.nav-logo span{color:var(--accent);}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{
+  color:var(--muted);text-decoration:none;
+  font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--accent);}
+
+/* ── HERO ── */
+#hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:10rem 3rem 6rem;
+  overflow:hidden;
+}
+.grid-bg{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(0,229,160,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,160,0.04) 1px, transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 70% 70% at 50% 50%, black, transparent);
+}
+.glow-orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(120px);
+  pointer-events:none;z-index:0;
+}
+.orb1{width:600px;height:600px;background:rgba(0,229,160,0.08);top:-100px;left:-200px;}
+.orb2{width:500px;height:500px;background:rgba(0,184,255,0.06);bottom:-100px;right:-100px;}
+
+.hero-content{position:relative;z-index:1;max-width:900px;}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--accent);
+  border:1px solid rgba(0,229,160,0.25);
+  padding:0.35rem 0.9rem;border-radius:2rem;
+  margin-bottom:2rem;
+}
+.hero-tag::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+
+h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(3rem,8vw,7rem);
+  font-weight:800;
+  line-height:0.95;
+  letter-spacing:-0.04em;
+  margin-bottom:0.2em;
+}
+h1 .line1{display:block;color:var(--text);}
+h1 .line2{display:block;color:var(--accent);}
+h1 .line3{
+  display:block;
+  -webkit-text-stroke:1px rgba(255,255,255,0.2);
+  color:transparent;
+}
+
+.hero-sub{
+  max-width:520px;
+  color:var(--muted);
+  font-size:0.85rem;
+  margin:2rem 0 3rem;
+  line-height:1.9;
+}
+.hero-sub span{color:var(--text);}
+
+.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.8rem 1.6rem;border-radius:0.4rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.75rem;letter-spacing:0.05em;
+  text-decoration:none;cursor:pointer;border:none;
+  transition:all 0.2s;
+}
+.btn-primary{
+  background:var(--accent);color:#080c10;font-weight:500;
+}
+.btn-primary:hover{background:#00ffb3;transform:translateY(-2px);}
+.btn-ghost{
+  background:transparent;color:var(--text);
+  border:1px solid var(--border);
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.25);background:var(--surface);}
+
+.hero-stats{
+  display:flex;gap:3rem;margin-top:5rem;
+  border-top:1px solid var(--border);padding-top:2rem;
+}
+.stat-num{
+  font-family:'Syne',sans-serif;
+  font-size:2.2rem;font-weight:800;
+  color:var(--text);
+}
+.stat-num span{color:var(--accent);font-size:1.4rem;}
+.stat-label{font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.2rem;}
+
+/* ── SECTION COMMONS ── */
+section{padding:7rem 3rem;position:relative;z-index:1;}
+.section-label{
+  font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:0.8rem;
+}
+.section-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2rem,4vw,3.2rem);
+  font-weight:800;letter-spacing:-0.03em;
+  line-height:1.1;margin-bottom:3.5rem;
+}
+
+/* ── PROJECTS ── */
+#projects{background:var(--surface);}
+.projects-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+  gap:1.5px;
+}
+.project-card{
+  background:var(--bg);
+  padding:2.5rem;
+  position:relative;overflow:hidden;
+  transition:background 0.3s;
+  cursor:pointer;
+}
+.project-card::before{
+  content:'';position:absolute;
+  inset:0;opacity:0;
+  transition:opacity 0.3s;
+  background:linear-gradient(135deg,rgba(0,229,160,0.05),transparent 60%);
+}
+.project-card:hover{background:var(--surface2);}
+.project-card:hover::before{opacity:1;}
+
+.project-card:first-child{grid-column:span 2;}
+
+.proj-id{
+  font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:1.5rem;
+}
+.proj-status{
+  display:inline-block;
+  font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;
+  padding:0.2rem 0.7rem;border-radius:2rem;margin-bottom:1.5rem;margin-left:1rem;
+}
+.status-active{background:rgba(0,229,160,0.1);color:var(--accent);border:1px solid rgba(0,229,160,0.2);}
+.status-dev{background:rgba(0,184,255,0.1);color:var(--accent2);border:1px solid rgba(0,184,255,0.2);}
+.status-beta{background:rgba(255,79,94,0.1);color:var(--danger);border:1px solid rgba(255,79,94,0.2);}
+
+.proj-name{
+  font-family:'Syne',sans-serif;
+  font-size:1.8rem;font-weight:800;
+  letter-spacing:-0.03em;
+  margin-bottom:0.8rem;
+}
+.proj-desc{
+  color:var(--muted);font-size:0.8rem;
+  line-height:1.8;margin-bottom:2rem;
+}
+.proj-tags{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.proj-tag{
+  font-size:0.65rem;padding:0.25rem 0.65rem;
+  border:1px solid var(--border);
+  border-radius:0.25rem;color:var(--muted);
+}
+
+.proj-icon{
+  position:absolute;bottom:2rem;right:2rem;
+  font-size:3rem;opacity:0.07;
+  font-family:'Syne',sans-serif;font-weight:800;
+  letter-spacing:-0.05em;
+}
+.project-card:hover .proj-icon{opacity:0.12;}
+
+/* ── STACK ── */
+#stack{background:var(--bg);}
+.stack-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+  gap:1px;
+  border:1px solid var(--border);
+}
+.stack-item{
+  padding:1.5rem 1rem;
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  transition:background 0.2s;
+}
+.stack-item:hover{background:var(--surface);}
+.stack-icon{font-size:1.4rem;}
+.stack-name{font-size:0.7rem;color:var(--muted);text-align:center;}
+
+/* ── CONTACT ── */
+#contact{background:var(--surface);text-align:center;}
+.contact-inner{max-width:600px;margin:0 auto;}
+.contact-inner .section-title{margin-bottom:1rem;}
+.contact-inner p{color:var(--muted);font-size:0.85rem;margin-bottom:3rem;}
+.contact-email{
+  display:inline-block;
+  font-family:'Syne',sans-serif;
+  font-size:1.1rem;font-weight:700;
+  color:var(--text);
+  border-bottom:2px solid var(--accent);
+  padding-bottom:0.3rem;
+  text-decoration:none;
+  transition:color 0.2s;
+}
+.contact-email:hover{color:var(--accent);}
+
+/* ── FOOTER ── */
+footer{
+  padding:2rem 3rem;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:0.7rem;color:var(--muted);
+}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:0.9rem;color:var(--text);}
+.footer-logo span{color:var(--accent);}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* ── CURSOR LINE ── */
+.cursor-line{
+  position:fixed;top:0;left:0;
+  width:1px;height:100vh;
+  background:linear-gradient(to bottom,transparent,rgba(0,229,160,0.4),transparent);
+  pointer-events:none;z-index:9999;
+  transition:left 0.08s ease;
+  opacity:0;
+}
+
+@media(max-width:768px){
+  nav{padding:1.2rem 1.5rem;}
+  #hero,section{padding-left:1.5rem;padding-right:1.5rem;}
+  .project-card:first-child{grid-column:span 1;}
+  .hero-stats{flex-wrap:wrap;gap:2rem;}
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <img src="logo.png" alt="SilentSniper Labs Logo" />
-    <h1>SilentSniper Labs</h1>
-    <p>We build cutting-edge AI systems, real-time trading bots and tools for serious traders. Welcome to the lab of the silent sniper.</p>
+
+<div class="cursor-line" id="cursorLine"></div>
+
+<nav>
+  <div class="nav-logo">Sniper<span>Labs</span></div>
+  <ul class="nav-links">
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#apps">Apps</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="grid-bg"></div>
+  <div class="glow-orb orb1"></div>
+  <div class="glow-orb orb2"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Available for projects · 2025</div>
+    <h1>
+      <span class="line1">Building</span>
+      <span class="line2">tomorrow's</span>
+      <span class="line3">software.</span>
+    </h1>
+    <p class="hero-sub">
+      Independent developer crafting <span>AI agents</span>, <span>mobile apps</span>,
+      and <span>custom language models</span>.<br>
+      Based in Lausanne · sniperlabsdeveloper.com
+    </p>
+    <div class="hero-ctas">
+      <a href="#projects" class="btn btn-primary">View Projects →</a>
+      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">10<span>+</span></div>
+        <div class="stat-label">Active Projects</div>
+      </div>
+      <div>
+        <div class="stat-num">∞</div>
+        <div class="stat-label">AI Experiments</div>
+      </div>
+      <div>
+        <div class="stat-num">1<span>x</span></div>
+        <div class="stat-label">RTX 5080 Beast</div>
+      </div>
+    </div>
   </div>
+</section>
+
+<!-- ══ PROJECTS ══ -->
+<section id="projects">
+  <div class="reveal">
+    <div class="section-label">// 01 — Work</div>
+    <div class="section-title">Projects &<br>Applications</div>
+  </div>
+  <div class="projects-grid reveal">
+
+    <div class="project-card">
+      <div>
+        <span class="proj-id">PRJ-001</span>
+        <span class="proj-status status-active">Active</span>
+      </div>
+      <div class="proj-name">NAVARIUS</div>
+      <p class="proj-desc">
+        Autonomous AI agent that executes tasks via terminal, filesystem and browser automation.
+        Real-time browser streaming over WebSocket. Dark split-panel UI with dual-model architecture.
+      </p>
+      <div class="proj-tags">
+        <span class="proj-tag">qwen3-coder:30b</span>
+        <span class="proj-tag">Playwright</span>
+        <span class="proj-tag">WebSocket</span>
+        <span class="proj-tag">Ollama</span>
+        <span class="proj-tag">Python</span>
+      </div>
+      <div class="proj-icon">NAV</div>
+    </div>
+
+    <div class="project-card">
+      <div>
+        <span class="proj-id">PRJ-002</span>
+        <span class="proj-status status-dev">In Dev</span>
+      </div>
+      <div class="proj-name">AMORADIO</div>
+      <p class="proj-desc">
+        Android radio app with MilkDrop-style visualizations powered by butterchurn.
+        React + Vite / Capacitor architecture with ACRCloud music recognition.
+      </p>
+      <div class="proj-tags">
+        <span class="proj-tag">React</span>
+        <span class="proj-tag">Capacitor</span>
+        <span class="proj-tag">butterchurn</span>
+        <span class="proj-tag">ACRCloud</span>
+        <span class="proj-tag">Android</span>
+      </div>
+      <div class="proj-icon">AMR</div>
+    </div>
+
+    <div class="project-card">
+      <div>
+        <span class="proj-id">PRJ-003</span>
+        <span class="proj-status status-beta">Beta</span>
+      </div>
+      <div class="proj-name">SERAPHINE</div>
+      <p class="proj-desc">
+        Custom Spanish-language LLM. Hybrid MoE + Mamba SSM + GQA architecture
+        with DoRA experts, Medusa speculative decoding and an HRM orchestrator.
+      </p>
+      <div class="proj-tags">
+        <span class="proj-tag">PyTorch</span>
+        <span class="proj-tag">Mamba SSM</span>
+        <span class="proj-tag">MoE</span>
+        <span class="proj-tag">Custom Tokenizer</span>
+      </div>
+      <div class="proj-icon">SRP</div>
+    </div>
+
+    <div class="project-card">
+      <div>
+        <span class="proj-id">PRJ-004</span>
+        <span class="proj-status status-dev">In Dev</span>
+      </div>
+      <div class="proj-name">MORA STUDIO</div>
+      <p class="proj-desc">
+        Flask-based AI image & video generation server with a child-friendly web UI.
+        HunyuanImage3 and LTX-2 quantized models on RTX 5080.
+      </p>
+      <div class="proj-tags">
+        <span class="proj-tag">Flask</span>
+        <span class="proj-tag">HunyuanImage3</span>
+        <span class="proj-tag">LTX-2</span>
+        <span class="proj-tag">Ubuntu 24</span>
+      </div>
+      <div class="proj-icon">MST</div>
+    </div>
+
+    <div class="project-card">
+      <div>
+        <span class="proj-id">PRJ-005</span>
+        <span class="proj-status status-beta">Beta</span>
+      </div>
+      <div class="proj-name">BICHO</div>
+      <p class="proj-desc">
+        Experimental LLM trained from scratch. Hybrid MoE + Mamba SSM + GQA
+        architecture with DoRA experts, Medusa v2 speculative decoding and an HRM
+        orchestrator. Companion to Seraphine, diverging on architectural bets and
+        training corpus.
+      </p>
+      <div class="proj-tags">
+        <span class="proj-tag">PyTorch</span>
+        <span class="proj-tag">Mamba SSM</span>
+        <span class="proj-tag">MoE + DoRA</span>
+        <span class="proj-tag">HRM</span>
+        <span class="proj-tag">Medusa v2</span>
+        <span class="proj-tag">RTX 5080</span>
+      </div>
+      <div class="proj-icon">BCH</div>
+    </div>
+
+    <div class="project-card">
+      <div>
+        <span class="proj-id">PRJ-006</span>
+        <span class="proj-status status-active">Active</span>
+      </div>
+      <div class="proj-name">SILENT SNIPER</div>
+      <p class="proj-desc">
+        Autonomous crypto trading bot with a multi-model ensemble (RandomForest,
+        XGBoost, LSTM) + PPO reinforcement learning agent. VAE anomaly detection
+        per-symbol, dynamic position sizing and live Binance integration.
+      </p>
+      <div class="proj-tags">
+        <span class="proj-tag">PPO / SB3</span>
+        <span class="proj-tag">XGBoost</span>
+        <span class="proj-tag">LSTM</span>
+        <span class="proj-tag">VAE</span>
+        <span class="proj-tag">ccxt</span>
+        <span class="proj-tag">Gymnasium</span>
+      </div>
+      <div class="proj-icon">SNP</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ APPS ══ -->
+<section id="apps" style="background:var(--bg);">
+  <div class="reveal">
+    <div class="section-label">// 02 — Mobile &amp; Utilities</div>
+    <div class="section-title">Apps</div>
+  </div>
+  <div class="projects-grid reveal" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));">
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-001</span><span class="proj-status status-active">Published</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">AllVoices</div>
+      <p class="proj-desc">Multi-voice AI text-to-speech app with real-time synthesis and per-voice style controls.</p>
+      <div class="proj-tags"><span class="proj-tag">TTS</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">AV</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-002</span><span class="proj-status status-dev">In Dev</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">BorrowedDreams</div>
+      <p class="proj-desc">AI-powered dream journal that interprets and visualizes your dreams with generative imagery.</p>
+      <div class="proj-tags"><span class="proj-tag">GenAI</span><span class="proj-tag">Mobile</span></div>
+      <div class="proj-icon" style="font-size:2rem;">BD</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-003</span><span class="proj-status status-active">Published</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">Celebrity Voice App</div>
+      <p class="proj-desc">Real-time celebrity voice cloning and synthesis with an intuitive selector interface.</p>
+      <div class="proj-tags"><span class="proj-tag">Voice Clone</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">CV</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-004</span><span class="proj-status status-active">Published</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">Chatbotillo</div>
+      <p class="proj-desc">Lightweight conversational AI chatbot optimized for low-latency on-device inference.</p>
+      <div class="proj-tags"><span class="proj-tag">LLM</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">CB</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-005</span><span class="proj-status status-dev">In Dev</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">CrazyAI</div>
+      <p class="proj-desc">Experimental AI sandbox for testing unconventional model behaviors and prompt extremes.</p>
+      <div class="proj-tags"><span class="proj-tag">AI</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">CA</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-006</span><span class="proj-status status-dev">In Dev</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">CrazyAI Chat 2</div>
+      <p class="proj-desc">Second iteration with persistent memory, multi-persona support and richer UI.</p>
+      <div class="proj-tags"><span class="proj-tag">AI</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">C2</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-007</span><span class="proj-status status-active">Published</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">Crypto Sniper Academy</div>
+      <p class="proj-desc">Educational platform for crypto trading signals, strategy learning and market analysis.</p>
+      <div class="proj-tags"><span class="proj-tag">Crypto</span><span class="proj-tag">Education</span></div>
+      <div class="proj-icon" style="font-size:2rem;">CS</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-008</span><span class="proj-status status-active">Published</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">El Chatbot</div>
+      <p class="proj-desc">Spanish-first AI assistant with voice input, custom personalities and offline fallback.</p>
+      <div class="proj-tags"><span class="proj-tag">Spanish NLP</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">EC</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-009</span><span class="proj-status status-dev">In Dev</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">El Tono del Grupo v2</div>
+      <p class="proj-desc">Group ringtone manager — auto-assigns personalized tones to contacts with AI voice matching.</p>
+      <div class="proj-tags"><span class="proj-tag">Audio</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">ET</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-010</span><span class="proj-status status-active">Published</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">MyApplication</div>
+      <p class="proj-desc">General-purpose productivity app with modular AI features and extensible plugin system.</p>
+      <div class="proj-tags"><span class="proj-tag">Productivity</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">MA</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-011</span><span class="proj-status status-dev">In Dev</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">NYAM</div>
+      <p class="proj-desc">AI nutrition assistant — scans food, logs intake and suggests personalized recipes.</p>
+      <div class="proj-tags"><span class="proj-tag">Vision AI</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">NY</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-012</span><span class="proj-status status-beta">Beta</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">OnceUponAI</div>
+      <p class="proj-desc">AI storytelling engine — interactive bedtime stories with personalized characters.</p>
+      <div class="proj-tags"><span class="proj-tag">GenAI</span><span class="proj-tag">Kids</span></div>
+      <div class="proj-icon" style="font-size:2rem;">OU</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-013</span><span class="proj-status status-active">Published</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">QR Sniper</div>
+      <p class="proj-desc">Fast QR scanner and generator with batch mode, history and deep-link parsing.</p>
+      <div class="proj-tags"><span class="proj-tag">Utility</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">QR</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-014</span><span class="proj-status status-active">Published</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">SOS Flashlight</div>
+      <p class="proj-desc">Emergency SOS flashlight with Morse code signaling, strobe patterns and loud alarm.</p>
+      <div class="proj-tags"><span class="proj-tag">Utility</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">SF</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-015</span><span class="proj-status status-active">Published</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">VPN Sniper</div>
+      <p class="proj-desc">Lightweight VPN client with auto-server selection, kill-switch and zero-log policy.</p>
+      <div class="proj-tags"><span class="proj-tag">Security</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">VS</div>
+    </div>
+
+    <div class="project-card">
+      <div><span class="proj-id">APP-016</span><span class="proj-status status-active">Published</span></div>
+      <div class="proj-name" style="font-size:1.3rem;">WiFi Sniper Pro</div>
+      <p class="proj-desc">Advanced WiFi analyzer — signal strength maps, channel scanner, interference detection.</p>
+      <div class="proj-tags"><span class="proj-tag">Network</span><span class="proj-tag">Android</span></div>
+      <div class="proj-icon" style="font-size:2rem;">WS</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ STACK ══ -->
+<section id="stack">
+  <div class="reveal">
+    <div class="section-label">// 03 — Tools</div>
+    <div class="section-title">Tech Stack</div>
+  </div>
+  <div class="stack-grid reveal">
+    <div class="stack-item"><div class="stack-icon">🐍</div><div class="stack-name">Python</div></div>
+    <div class="stack-item"><div class="stack-icon">⚛️</div><div class="stack-name">React</div></div>
+    <div class="stack-item"><div class="stack-icon">🔥</div><div class="stack-name">PyTorch</div></div>
+    <div class="stack-item"><div class="stack-icon">🤖</div><div class="stack-name">Ollama</div></div>
+    <div class="stack-item"><div class="stack-icon">🎭</div><div class="stack-name">Playwright</div></div>
+    <div class="stack-item"><div class="stack-icon">🐧</div><div class="stack-name">Linux</div></div>
+    <div class="stack-item"><div class="stack-icon">⚡</div><div class="stack-name">RTX 5080</div></div>
+    <div class="stack-item"><div class="stack-icon">📱</div><div class="stack-name">Capacitor</div></div>
+    <div class="stack-item"><div class="stack-icon">🌐</div><div class="stack-name">WebSocket</div></div>
+    <div class="stack-item"><div class="stack-icon">🔩</div><div class="stack-name">Flask</div></div>
+    <div class="stack-item"><div class="stack-icon">🗃️</div><div class="stack-name">Node.js</div></div>
+    <div class="stack-item"><div class="stack-icon">🐳</div><div class="stack-name">Docker</div></div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="contact-inner reveal">
+    <div class="section-label">// 04 — Contact</div>
+    <div class="section-title">Let's build<br>something.</div>
+    <p>Have a project in mind? A wild AI idea? Let's talk.</p>
+    <a href="mailto:sniperlabsdeveloper@gmail.com" class="contact-email">
+      sniperlabsdeveloper@gmail.com
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Sniper<span>Labs</span></div>
+  <div>© 2025 sniperlabsdeveloper.com — all systems go</div>
+</footer>
+
+<script>
+const cursorLine = document.getElementById('cursorLine');
+document.addEventListener('mousemove', e => {
+  cursorLine.style.left = e.clientX + 'px';
+  cursorLine.style.opacity = '1';
+});
+document.addEventListener('mouseleave', () => { cursorLine.style.opacity = '0'; });
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.classList.add('visible');
+      const siblings = e.target.parentElement.querySelectorAll('.reveal');
+      siblings.forEach((s, i) => {
+        setTimeout(() => s.classList.add('visible'), i * 120);
+      });
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
